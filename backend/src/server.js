@@ -12,10 +12,11 @@ const app = express();
 // Middleware
 
 // Simple logger middleware to log the request method and path
-app.use((req, res, next) => {
-  console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
-  next();
-});
+// i don't know it's cost on free plan, so i commented it out for now. if you want to use it, uncomment it and see if it works. if not, just delete it.
+// app.use((req, res, next) => {
+//   console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+//   next();
+// });
 
 // cors middleware
 app.use(
