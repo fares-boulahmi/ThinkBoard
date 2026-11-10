@@ -7,6 +7,8 @@ import { connectToMongoDB } from "./config/db.js";
 import rateLimiter from "./middleware/rateLimiter.js";
 import notesRoutes from "./routes/notesRoutes.js";
 
+import path from "path";
+
 const app = express();
 
 // Middleware
@@ -19,11 +21,13 @@ const app = express();
 // });
 
 // cors middleware
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL, // Allow requests from the frontend URL
-  }),
-);
+if (process.env.NODE_ENV === "development") {
+  app.use(
+    cors({
+      origin: process.env.FRONTEND_URL, // Allow requests from the frontend URL
+    }),
+  );
+}
 
 app.use(express.json()); // Parse incoming JSON requests
 
@@ -32,6 +36,15 @@ app.use(rateLimiter);
 
 app.use("/api/notes", notesRoutes);
 const PORT = process.env.PORT || 5001;
+const __dirname = path.resolve();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+
+  app.get("*", (req, res) => {
+    res.sendFile(path.resolve(__dirname, "../frontend/dist/index.html"));
+  });
+}
 
 await connectToMongoDB().catch((error) => {
   console.error("Failed to connect to MongoDB:", error);
