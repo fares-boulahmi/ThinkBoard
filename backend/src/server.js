@@ -38,7 +38,7 @@ app.use("/api/notes", notesRoutes);
 const PORT = process.env.PORT || 5001;
 const __dirname = path.resolve();
 
-if (process.env.NODE_ENV === "production") {
+if (process.env.NODE_ENV !== "development") {
   app.use(express.static(path.join(__dirname, "../frontend/dist")));
 
   app.get("*", (req, res) => {
